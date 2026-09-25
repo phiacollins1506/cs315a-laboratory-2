@@ -1,0 +1,27 @@
+from typing import Optional
+from pydantic import BaseModel, Field
+
+class ProductBase(BaseModel):
+    name: str = Field(..., max_length=100, example="GIPHCO Industrial Safety Helmet")
+    description: Optional[str] = Field(None, example="Heavy-duty protective hard hat")
+    price: float = Field(..., gt=0, description="Price must be greater than 0", example=450.00)
+    stock: int = Field(default=0, ge=0, example=150)
+    category: str = Field(..., example="Safety Gear")
+    is_available: Optional[bool] = True
+
+class ProductCreate(ProductBase):
+    pass
+
+class ProductUpdate(BaseModel):
+    name: Optional[str] = Field(None, max_length=100)
+    description: Optional[str] = None
+    price: Optional[float] = Field(None, gt=0)
+    stock: Optional[int] = Field(None, ge=0)
+    category: Optional[str] = None
+    is_available: Optional[bool] = None
+
+class ProductResponse(ProductBase):
+    id: int
+
+    class Config:
+        from_attributes = True
